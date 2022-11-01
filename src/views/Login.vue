@@ -1,46 +1,87 @@
 <template class="corpo">
-
-    <div class="field">
-        <div class="form-login">
-            <div class="logo">
-                <span>
-                    <i class="bi bi-graph-up"></i>
-                </span>
-                <label for="">
-                    TaskFlow
-                </label>
+    <div>
+        <div class="field">
+            <div class="form-login">
+                <div class="logo">
+                    <span>
+                        <i class="bi bi-graph-up"></i>
+                    </span>
+                    <label for="">
+                        TaskFlow
+                    </label>
+                </div>
+                <form action="home" >
+                    <div class="input-group mb-3">
+                        <span class="input-group-text iconLogin" id="basic-addon1">
+                            <i class="bi bi-person-fill"></i>
+                        </span>
+                        <input type="email" class="form-control" placeholder="E-mail" v-model="userEmail">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text iconLogin" id="basic-addon1">
+                            <i class="bi bi-lock-fill"></i>
+                        </span>
+                        <input type="password" class="form-control" placeholder="Senha" v-model="userPassword">
+                    </div>
+                    <button class="btn btn-primary btn-submit" @click="fuc">Entrar</button>
+                </form>
             </div>
-            <form action="home" method="post" >
-                <div class="input-group mb-3">
-                    <span class="input-group-text iconLogin" id="basic-addon1">
-                        <i class="bi bi-person-fill"></i>
-                    </span>
-                    <input type="email" class="form-control" placeholder="E-mail"  >
-                </div>
-                <div class="input-group mb-3">
-                    <span class="input-group-text iconLogin" id="basic-addon1">
-                        <i class="bi bi-lock-fill"></i>
-                    </span>
-                    <input type="password" class="form-control" placeholder="Senha" >
-                </div>
-                <button type="submit" class="btn btn-primary btn-submit">Entrar</button>
-            </form>
         </div>
     </div>
 </template>
 
 <script>
-    export default{
-        name:"Login",
-        methods:{
+import Navbar from '../components/Navbar.vue';
+import router from '../router';
 
+    export default{
+    name: "Login",
+    components: { 
+        Navbar 
+    },
+    data(){
+        return{
+            userEmail: null,
+            userPassword: null,
         }
+    },
+    methods: {
+        async func(){
+            
+            const userDB = await this.buscaLoginUser()
+            
+            // if(!this.userEmail || this.userEmail == null || this.userEmail == ''){
+            //     console.log('email incorreto');               
+            // }else if(this.userEmail == this.userDB.user){
+            //     if(!this.userPassword || this.userPassword == null || this.userPassword == ''){
+            //         console.log('Senha incorreta!');
+            //     }else if(this.userPassword == this.userDB.password){
+            //         // router.push({name: 'home'})
+            //     }
+            //     console.log('Algum erro!')
+            // }else{
+            //     console.log('AAA')
+            // }
+        },
+        async buscaLoginUser(){
+            const req = await fetch("http://localhost:5000/user")
+            const data = await req.json()
+            // console.log(data);
+            return data
+            // this.user = data.user
+            // this.pass = data.password
+        }
+    },
+    mounted(){
+        // this.buscaLoginUser()
     }
+}
 </script>
 
 <style scoped>
     .field {
         padding: auto;
+        transition: .5s;
     }
 
     .logo{
@@ -67,6 +108,7 @@
     padding: 2px;
     margin:  10em auto;
     max-width: 25em;
+    /* box-shadow: 1px 1px 1px 1px #000; */
    }
    .form-login form{
     margin: auto;
