@@ -10,12 +10,14 @@
                         TaskFlow
                     </label>
                 </div>
-                <form action="home" >
+                <div class="form-container">
                     <div class="input-group mb-3">
                         <span class="input-group-text iconLogin" id="basic-addon1">
                             <i class="bi bi-person-fill"></i>
                         </span>
-                        <input type="email" class="form-control" placeholder="E-mail" v-model="userEmail">
+                        <input type="email" class="form-control" placeholder="E-mail" 
+                            v-model="userEmail"
+                            autocomplete="">
                     </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text iconLogin" id="basic-addon1">
@@ -23,8 +25,8 @@
                         </span>
                         <input type="password" class="form-control" placeholder="Senha" v-model="userPassword">
                     </div>
-                    <button class="btn btn-primary btn-submit" @click="fuc">Entrar</button>
-                </form>
+                    <button class="btn btn-primary btn-submit" @click="func">Entrar</button>
+                </div>
             </div>
         </div>
     </div>
@@ -50,18 +52,21 @@ import router from '../router';
             
             const userDB = await this.buscaLoginUser()
             
-            // if(!this.userEmail || this.userEmail == null || this.userEmail == ''){
-            //     console.log('email incorreto');               
-            // }else if(this.userEmail == this.userDB.user){
-            //     if(!this.userPassword || this.userPassword == null || this.userPassword == ''){
-            //         console.log('Senha incorreta!');
-            //     }else if(this.userPassword == this.userDB.password){
-            //         // router.push({name: 'home'})
-            //     }
-            //     console.log('Algum erro!')
-            // }else{
-            //     console.log('AAA')
-            // }
+            if(!this.userEmail || this.userEmail == null || this.userEmail == ''){
+                console.log('Campo de E-mail obrigatório!');               
+            }else if(this.userEmail == userDB.user){
+                
+                if(!this.userPassword || this.userPassword == null || this.userPassword == ''){
+                    console.log('Senha não informada!');
+                }else if(this.userPassword == userDB.password){
+                    // console.log('Senha incorreta!');
+                    router.push({name: 'home'})
+                } else{
+                    console.log('Senha incorreta!')
+                }
+            }else{
+                console.log('email inválido!');
+            }
         },
         async buscaLoginUser(){
             const req = await fetch("http://localhost:5000/user")
@@ -110,7 +115,7 @@ import router from '../router';
     max-width: 25em;
     /* box-shadow: 1px 1px 1px 1px #000; */
    }
-   .form-login form{
+   .form-login .form-container{
     margin: auto;
     max-width: 20em;
    }
