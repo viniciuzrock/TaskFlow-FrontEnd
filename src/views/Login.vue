@@ -1,6 +1,9 @@
 <template class="corpo">
     <div>
         <div class="field">
+            <div class="alert alert-danger" role="alert" v-if="erro">
+                {{erro}}
+            </div>
             <div class="form-login">
                 <div class="logo">
                     <span>
@@ -13,7 +16,7 @@
                 <div class="form-container">
                     <div class="input-group mb-3">
                         <span class="input-group-text iconLogin" id="basic-addon1">
-                            <i class="bi bi-person-fill"></i>
+                            <i class="bi bi-envelope-paper-fill email"></i>
                         </span>
                         <input type="email" class="form-control" placeholder="E-mail" 
                             v-model="userEmail"
@@ -25,7 +28,7 @@
                         </span>
                         <input type="password" class="form-control" placeholder="Senha" v-model="userPassword">
                     </div>
-                    <button class="btn btn-primary btn-submit" @click="func">Entrar</button>
+                    <button class="btn btn-primary btn-submit" @click="login">Entrar</button>
                 </div>
             </div>
         </div>
@@ -33,54 +36,49 @@
 </template>
 
 <script>
-import Navbar from '../components/Navbar.vue';
 import router from '../router';
-
+import Teste from '../components/teste.vue';
     export default{
-    name: "Login",
-    components: { 
-        Navbar 
-    },
-    data(){
-        return{
-            userEmail: null,
-            userPassword: null,
-        }
-    },
-    methods: {
-        async func(){
-            
-            const userDB = await this.buscaLoginUser()
-            
-            if(!this.userEmail || this.userEmail == null || this.userEmail == ''){
-                console.log('Campo de E-mail obrigatório!');               
-            }else if(this.userEmail == userDB.user){
-                
-                if(!this.userPassword || this.userPassword == null || this.userPassword == ''){
-                    console.log('Senha não informada!');
-                }else if(this.userPassword == userDB.password){
-                    // console.log('Senha incorreta!');
-                    router.push({name: 'home'})
-                } else{
-                    console.log('Senha incorreta!')
-                }
-            }else{
-                console.log('email inválido!');
+        components: { Teste },
+        
+        name: "Login",
+        data(){
+            return{
+                userEmail: null,
+                userPassword: null,
+                erro:false
             }
         },
-        async buscaLoginUser(){
-            const req = await fetch("http://localhost:5000/user")
-            const data = await req.json()
-            // console.log(data);
-            return data
-            // this.user = data.user
-            // this.pass = data.password
+        methods: {
+            async login(){
+                const userDB = await this.buscaLoginUser()
+                
+                if(this.userEmail == userDB.user){ 
+                    if(this.userPassword == userDB.password){
+                        router.push({name: 'home'})
+                    }else{
+                        this.erro='Senha inválida ou não informada.'
+                        setTimeout(()=>{
+                        this.erro = false
+                        },2000)
+                    }            
+                }else{
+                    this.erro='Email inválido ou não informado.'
+                    setTimeout(()=>{
+                        this.erro = false
+                    },2000)
+                }
+            },
+            async buscaLoginUser(){
+                const req = await fetch("http://localhost:5000/user")
+                const data = await req.json()
+                return data
+            }
+        },
+        mounted(){
+            // this.buscaLoginUser()
         }
-    },
-    mounted(){
-        // this.buscaLoginUser()
     }
-}
 </script>
 
 <style scoped>
@@ -111,9 +109,8 @@ import router from '../router';
     border: solid 1px #CED4DA;
     border-radius: 8px;
     padding: 2px;
-    margin:  10em auto;
+    margin:  7em auto;
     max-width: 25em;
-    /* box-shadow: 1px 1px 1px 1px #000; */
    }
    .form-login .form-container{
     margin: auto;
@@ -128,11 +125,24 @@ import router from '../router';
    }
    .iconLogin i{
     width: 30px;
-    font-size: 30px;
+    font-size: 20px;
+   }    
+   .iconLogin i .email{
+    width: 10px;
+    font-size: 10px;
    }    
 
    .btn-submit{
     width: 20em;
     margin-bottom: 15px;
    }
+
+    .alert{
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 20px ;
+        margin-bottom: 0rem;
+        padding: 30px;
+    }
 </style>

@@ -15,7 +15,7 @@
 <style scoped>
     #nav{
         background-color: transparent;
-        border-bottom: 4px solid #111;
+        /* border-bottom: 4px solid #111; */
         padding: 15px 50px;
         display: flex;
         justify-content: center;

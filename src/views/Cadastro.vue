@@ -1,67 +1,105 @@
 <template class="corpo">
-    <!-- <div> -->
         <div class="field">
-            <!-- aaaaa -->
+            <div class="alert alert-danger" role="alert" v-if="erro">
+                {{erro}}
+            </div>
             <div class="form-login">
                 <div class="logo">
                     <span>
                         <i class="bi bi-graph-up"></i>
                     </span>
-                    <label for="">
-                        TaskFlow
-                    </label>
+                    <label for="">TaskFlow</label>
                 </div>
-                <form action="home" method="post" >
+                <div class="form-container">
                     <div class="input-group mb-3">
                         <span class="input-group-text iconLogin" id="basic-addon1">
                             <i class="bi bi-person-fill"></i>
                         </span>
-                        <input type="text" class="form-control" placeholder="Nome"  >
+                        <input type="text" class="form-control" placeholder="Nome" 
+                            v-model="name" 
+                            minlength="4">
                     </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text iconLogin" id="basic-addon1">
-                            <i class="bi bi-person-fill"></i>
+                            <i class="bi bi-envelope-paper-fill"></i>
                         </span>
-                        <input type="email" class="form-control" placeholder="E-mail"  >
+                        <input type="email" class="form-control" placeholder="E-mail"
+                            v-model="email"
+                            autocomplete="no">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text iconLogin" id="basic-addon1">
+                            <i class="bi bi-unlock-fill"></i>
+                        </span>
+                        <input type="password" class="form-control" placeholder="Senha" 
+                            v-model="password">
                     </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text iconLogin" id="basic-addon1">
                             <i class="bi bi-lock-fill"></i>
                         </span>
-                        <input type="password" class="form-control" placeholder="Senha" >
+                        <input type="password" class="form-control" placeholder="Confirme a Senha" 
+                            v-model="confirmPassword">
                     </div>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text iconLogin" id="basic-addon1">
-                            <i class="bi bi-lock-fill"></i>
-                        </span>
-                        <input type="password" class="form-control" placeholder="Confirme a Senha" >
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-submit" @click="func">Entrar</button>
-                </form>
+                    <!-- OCULTAR SENHAS
+                    <i class="bi bi-eye-fill"></i> - olho aberto
+                    <i class="bi bi-eye-slash-fill"></i> - olho fechado -->
+                    <button class="btn btn-primary btn-submit" @click="register">Cadastrar</button>
+                </div>
             </div>
         </div>
-    <!-- </div> -->
 </template>
 
 <script>
-import Navbar from '../components/Navbar.vue';
-
+import router from '../router';
     export default{
     name: "Login",
+    data(){
+        return{
+            erro:false
+        }
+    },
     methods: {
-        func(){
-            router.push({name: 'home'})
+        async register(){
+            if(this.password != this.confirmPassword){
+                this.erro='Senhas não conferem.'
+                    setTimeout(()=>{
+                    this.erro = false
+                    },2000)
+            }
+            const userDataLogin = {
+                userName: this.name,
+                userEmail: this.email,
+                userPassword: this.confirmPassword
+            }
+            
+            try {
+            const dataJson = JSON.stringify(userDataLogin)
+                const req = await fetch("http://localhost:5000/users",{
+                    method: "POST",
+                    headers: {"Content-Type":"application/json"},
+                    body:dataJson
+                })
+                
+                const res = await req.json()
+                console.log(res)
+
+            } catch (error) {
+                console.log('AAAAAAA');
+                console.log(error);
+            }
+            // router.push({name: 'home'})
+            console.log('ZZZZZZ');
+            console.log(req);
         }
     },
     components: { 
-        Navbar 
+
     }
 }
 </script>
 
 <style scoped>
-
-
     
     .field {
         padding: auto;
@@ -97,7 +135,7 @@ import Navbar from '../components/Navbar.vue';
     max-width: 25em;
     /* box-shadow: 1px 1px 1px 1px #000; */
    }
-   .form-login form{
+   .form-login .form-container{
     margin: auto;
     max-width: 20em;
    }
@@ -110,11 +148,19 @@ import Navbar from '../components/Navbar.vue';
    }
    .iconLogin i{
     width: 30px;
-    font-size: 30px;
+    font-size: 20px;
    }    
 
    .btn-submit{
     width: 20em;
     margin-bottom: 15px;
    }
+   .alert{
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 20px ;
+        margin-bottom: 0rem;
+        padding: 30px;
+    }
 </style>
