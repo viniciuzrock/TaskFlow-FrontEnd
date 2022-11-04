@@ -20,9 +20,16 @@ const router = createRouter({
       component: Cadastro
     },
     {
-      path: '/home',
+      path: '/:homeUser',
       name: 'home',
-      component: Home
+      component: Home, 
+      // children: [
+      //   {
+      //     path: "/:user",
+      //     name: "homeUser",
+
+      //   }
+      // ]
     },
     {
       path: '/tarefas',

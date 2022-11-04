@@ -5,7 +5,7 @@
                 <li class="list-group-item">
                     <div class="list-perfil">
                         <i class="bi bi-person-circle"></i>
-                        <label for="">UserName</label>
+                        <label for="">{{userLogin}}</label>
                     </div>
                 </li>
                 <li class="list-group-item" id="home" @click="marcaItem()">
@@ -54,6 +54,14 @@
 </template>
 <script>
     export default{
+        data(){
+            return{
+                userLogin: this.$route.params.homeUser, //homeUser é o parâmetro da rota
+                form:{
+
+                }
+            }
+        },  
         methods:{
             marcaItem(){
                 if(this.$route.name == "home"){
@@ -96,6 +104,7 @@
         border-bottom-left-radius: 20px;
         border: none;
         text-decoration: none;
+        margin-left: 0.3em;
     }
     .list-group-item:hover{
         background-color: rgb(233, 233, 233);
