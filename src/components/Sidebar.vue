@@ -43,7 +43,7 @@
                 <li class="list-group-item">
                     <router-link to="/">
                         <div>
-                            <i class="bi bi-reply-fill"></i>
+                            <i class="bi bi-power"></i>
                             <label for="">Logout</label>
                         </div>
                     </router-link>

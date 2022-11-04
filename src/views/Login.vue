@@ -2,6 +2,7 @@
     <div>
         <div class="field">
             <div class="alert alert-danger" role="alert" v-if="erro">
+                <i class="bi bi-exclamation-triangle-fill"></i>
                 {{erro}}
             </div>
             <div class="form-login">
@@ -13,23 +14,27 @@
                         TaskFlow
                     </label>
                 </div>
-                <div class="form-container">
+                <form class="form-container" @submit="login($event)">
+                <!-- <div class="form-container"> -->
                     <div class="input-group mb-3">
                         <span class="input-group-text iconLogin" id="basic-addon1">
                             <i class="bi bi-envelope-paper-fill email"></i>
                         </span>
                         <input type="email" class="form-control" placeholder="E-mail" 
                             v-model="userEmail"
-                            autocomplete="">
+                            required>
                     </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text iconLogin" id="basic-addon1">
                             <i class="bi bi-lock-fill"></i>
                         </span>
-                        <input type="password" class="form-control" placeholder="Senha" v-model="userPassword">
+                        <input type="password" class="form-control" placeholder="Senha" required v-model="userPassword">
                     </div>
-                    <button class="btn btn-primary btn-submit" @click="login">Entrar</button>
-                </div>
+                    <!-- <button class="btn btn-primary btn-submit" @click="login">Entrar</button> -->
+                    <button type="submit" class="btn btn-primary btn-submit">Entrar</button>
+                    <!-- SALVAR USUARIO NA PROXIMA ROTA -->
+                <!-- </div> -->
+                </form>
             </div>
         </div>
     </div>
@@ -37,22 +42,23 @@
 
 <script>
 import router from '../router';
-import Teste from '../components/teste.vue';
     export default{
-        components: { Teste },
+        components: {  },
         
         name: "Login",
         data(){
             return{
                 userEmail: null,
                 userPassword: null,
-                erro:false
+                erro:false,
+                userId: JSON.parse(localStorage.getItem(userId)).id
             }
         },
         methods: {
-            async login(){
+            async login(e){
+                e.preventDefault()
                 const userDB = await this.buscaLoginUser()
-                
+                console.log(this.userId);
                 if(this.userEmail == userDB.user){ 
                     if(this.userPassword == userDB.password){
                         router.push({name: 'home'})
@@ -143,6 +149,12 @@ import Teste from '../components/teste.vue';
         right: 0;
         margin: 20px ;
         margin-bottom: 0rem;
-        padding: 30px;
+        padding: 20px;
+        display: flex;
+        flex-direction:row;
+        justify-content: space-between;
+    }
+    .alert i{
+        margin-right: 0.9em;
     }
 </style>
