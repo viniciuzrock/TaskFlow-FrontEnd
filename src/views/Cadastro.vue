@@ -1,6 +1,7 @@
 <template class="corpo">
         <div class="field">
             <div class="alert alert-danger" role="alert" v-if="erro">
+                <i class="bi bi-exclamation-triangle-fill"></i>
                 {{erro}}
             </div>
             <div class="form-login">
@@ -10,13 +11,14 @@
                     </span>
                     <label for="">TaskFlow</label>
                 </div>
-                <div class="form-container">
+                <form class="form-container" @submit.prevent="register">
+                <!-- <div class="form-container"> -->
                     <div class="input-group mb-3">
                         <span class="input-group-text iconLogin" id="basic-addon1">
                             <i class="bi bi-person-fill"></i>
                         </span>
                         <input type="text" class="form-control" placeholder="Nome" 
-                            v-model="name" 
+                            v-model="form.name" 
                             minlength="4">
                     </div>
                     <div class="input-group mb-3">
@@ -24,7 +26,7 @@
                             <i class="bi bi-envelope-paper-fill"></i>
                         </span>
                         <input type="email" class="form-control" placeholder="E-mail"
-                            v-model="email"
+                            v-model="form.email"
                             autocomplete="no">
                     </div>
                     <div class="input-group mb-3">
@@ -32,20 +34,22 @@
                             <i class="bi bi-unlock-fill"></i>
                         </span>
                         <input type="password" class="form-control" placeholder="Senha" 
-                            v-model="password">
+                            v-model="form.password">
                     </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text iconLogin" id="basic-addon1">
                             <i class="bi bi-lock-fill"></i>
                         </span>
                         <input type="password" class="form-control" placeholder="Confirme a Senha" 
-                            v-model="confirmPassword">
+                            v-model="form.confirmPassword">
                     </div>
                     <!-- OCULTAR SENHAS
                     <i class="bi bi-eye-fill"></i> - olho aberto
                     <i class="bi bi-eye-slash-fill"></i> - olho fechado -->
-                    <button class="btn btn-primary btn-submit" @click="register">Cadastrar</button>
-                </div>
+                    <button type="submit" class="btn btn-primary btn-submit">Cadastrar</button>
+                    <!-- <button class="btn btn-primary btn-submit" @click="register">Cadastrar</button> -->
+                <!-- </div> -->
+            </form>
             </div>
         </div>
 </template>
@@ -56,21 +60,28 @@ import router from '../router';
     name: "Login",
     data(){
         return{
-            erro:false
+            erro:false,
+            form:{
+                name: null,
+                password: null,
+            },
+            userEmail: null,
+            userPassword: null,
         }
     },
     methods: {
         async register(){
-            if(this.password != this.confirmPassword){
+            console.log(this.form)
+            if(this.form.password != this.form.confirmPassword){
                 this.erro='Senhas não conferem.'
                     setTimeout(()=>{
                     this.erro = false
                     },2000)
             }
             const userDataLogin = {
-                userName: this.name,
-                userEmail: this.email,
-                userPassword: this.confirmPassword
+                userName: this.form.name,
+                userEmail: this.form.email,
+                userPassword: this.form.confirmPassword
             }
             
             try {

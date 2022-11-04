@@ -14,21 +14,23 @@
                         TaskFlow
                     </label>
                 </div>
-                <form class="form-container" @submit="login($event)">
+                <form class="form-container" @submit.prevent="login">
                 <!-- <div class="form-container"> -->
                     <div class="input-group mb-3">
                         <span class="input-group-text iconLogin" id="basic-addon1">
                             <i class="bi bi-envelope-paper-fill email"></i>
                         </span>
                         <input type="email" class="form-control" placeholder="E-mail" 
-                            v-model="userEmail"
+                            v-model="form.userEmail"
                             required>
                     </div>
                     <div class="input-group mb-3">
                         <span class="input-group-text iconLogin" id="basic-addon1">
                             <i class="bi bi-lock-fill"></i>
                         </span>
-                        <input type="password" class="form-control" placeholder="Senha" required v-model="userPassword">
+                        <input type="password" class="form-control" placeholder="Senha" 
+                            v-model="form.userPassword"
+                            required >
                     </div>
                     <!-- <button class="btn btn-primary btn-submit" @click="login">Entrar</button> -->
                     <button type="submit" class="btn btn-primary btn-submit">Entrar</button>
@@ -48,31 +50,33 @@ import router from '../router';
         name: "Login",
         data(){
             return{
-                userEmail: null,
-                userPassword: null,
+                form:{
+                    userEmail: null,
+                    userPassword: null,
+                },
                 erro:false,
-                userId: JSON.parse(localStorage.getItem(userId)).id
             }
         },
         methods: {
-            async login(e){
-                e.preventDefault()
+            async login(){
+                // e.preventDefault()
                 const userDB = await this.buscaLoginUser()
                 console.log(this.userId);
-                if(this.userEmail == userDB.user){ 
-                    if(this.userPassword == userDB.password){
-                        router.push({name: 'home'})
+                if(this.form.userEmail == userDB.user){ 
+                    if(this.form.userPassword == userDB.password){
+                        console.log(this.form);
+                        router.push({name: 'home', params: { homeUser: this.form.userEmail}})
                     }else{
-                        this.erro='Senha inválida ou não informada.'
+                        this.erro='Senha inválida!'
                         setTimeout(()=>{
                         this.erro = false
-                        },2000)
-                    }            
+                        },3000)
+                    }
                 }else{
-                    this.erro='Email inválido ou não informado.'
+                    this.erro='Email inválido!'
                     setTimeout(()=>{
                         this.erro = false
-                    },2000)
+                    },3000)
                 }
             },
             async buscaLoginUser(){
@@ -149,7 +153,7 @@ import router from '../router';
         right: 0;
         margin: 20px ;
         margin-bottom: 0rem;
-        padding: 20px;
+        padding: 20px 30px;
         display: flex;
         flex-direction:row;
         justify-content: space-between;
